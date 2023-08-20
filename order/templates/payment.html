@@ -1,0 +1,50 @@
+<!-- payment.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Razorpay Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h1>Payment Details</h1>
+    <p>Name: {{ order.name }}</p>
+    <p>Amount: {{ order.amount }}</p>
+
+    <form method="POST" action="{% url 'callback' %}">
+        {% csrf_token %}
+        <input type="hidden" name="razorpay_order_id" value="{{ order.provider_order_id }}">
+        <input type="hidden" name="razorpay_signature" value="">
+        <button type="submit">Proceed to Pay</button>
+    </form>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_key }}",
+            "amount": "{{ order.amount }}",
+            "currency": "INR",
+            "name": "Your Company Name",
+            "description": "Payment for Order",
+            "image": "",
+            "order_id": "{{ order.provider_order_id }}",
+            "callback_url": "{{ callback_url }}",
+            "prefill": {
+                "name": "{{ order.name }}",
+                "email": "",
+                "contact": "",
+            },
+            "notes": {
+                "address": ""
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+        var rzp = new Razorpay(options);
+        document.querySelector("form").addEventListener("submit", function (e) {
+            e.preventDefault();
+            rzp.open();
+        });
+    </script>
+</body>
+</html>

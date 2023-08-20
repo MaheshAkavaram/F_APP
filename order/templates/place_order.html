@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Place Order</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+            background-color: #337ab7;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .alert {
+            display: block;
+            padding: 20px;
+            background-color: #f44336;
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* Custom CSS styles for address radio buttons */
+        .address-radio label {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .address-radio label:hover {
+            background-color: #f2f2f2;
+        }
+
+        .address-radio input[type="radio"] {
+            display: none;
+        }
+
+        .address-radio input[type="radio"]:checked + label {
+            background-color: #337ab7;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Place Order</h1>
+        <form id="order-form" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="user_name">User Name:</label>
+                <input type="text" id="user_name" name="user_name" required>
+            </div>
+            <div class="form-group">
+                <label for="mobile_number">Mobile Number:</label>
+                <input type="text" id="mobile_number" name="mobile_number" required>
+            </div>
+            <div class="form-group">
+                <label for="order_date">Order Date:</label>
+                <input type="date" id="order_date" name="order_date" required>
+            </div>
+            <div class="form-group">
+                <label for="order_time">Order Time:</label>
+                <input type="time" id="order_time" name="order_time" required>
+            </div>
+            <div class="form-group address-radio">
+                <label>
+                    <input type="radio" name="address" value="home" checked>
+                    Home
+                </label>
+                <label>
+                    <input type="radio" name="address" value="office">
+                    Office
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="payment_method">Payment Method:</label>
+                <select id="payment_method" name="payment_method" required>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="qr_code">QR Code</option>
+                    <!-- Add more payment method options here if needed -->
+                    <option value="razorpay">Razorpay</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-submit">Place Order</button>
+        </form>
+    </div>
+
+    <script>
+        // Add your JavaScript code here
+        document.addEventListener('DOMContentLoaded', function () {
+            const orderForm = document.getElementById('order-form');
+            orderForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const userNameInput = document.getElementById('user_name');
+                const mobileNumberInput = document.getElementById('mobile_number');
+                const orderDateInput = document.getElementById('order_date');
+                const orderTimeInput = document.getElementById('order_time');
+                const addressInputs = document.querySelectorAll('input[name="address"]');
+                const paymentMethodInput = document.getElementById('payment_method');
+
+                const csrfToken = getCookie('csrftoken');
+                if (!csrfToken) {
+                    console.log('CSRF token not found.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('user_name', userNameInput.value);
+                formData.append('mobile_number', mobileNumberInput.value);
+                formData.append('order_date', orderDateInput.value);
+                formData.append('order_time', orderTimeInput.value);
+                formData.append('address', getSelectedAddress());
+                formData.append('payment_method', paymentMethodInput.value);
+
+                fetch('{% url 'place_order' %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Error occurred while placing the order.');
+                        }
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert('Order placed successfully.');
+                            window.location.href = '{% url 'home' %}';
+                        } else {
+                            alert('Error occurred while placing the order.');
+                        }
+                    })
+                    .catch(error => {
+                        alert('Error occurred while placing the order.');
+                        console.error(error);
+                    });
+            });
+
+            function getSelectedAddress() {
+                const addressInputs = document.querySelectorAll('input[name="address"]');
+                for (const addressInput of addressInputs) {
+                    if (addressInput.checked) {
+                        return addressInput.value;
+                    }
+                }
+                return '';
+            }
+        });
+
+        function getCookie(name) {
+            // Function to get CSRF token cookie, as shown before
+        }
+    </script>
+</body>
+</html>

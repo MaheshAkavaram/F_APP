@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Success</title>
+    <style>
+        /* Add your CSS styles here */
+
+        /* Container styles */
+        .container {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        /* Animation styles */
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Success message styles */
+        .success-message {
+            font-size: 24px;
+            font-weight: bold;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        /* Home link styles */
+        .home-link {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .home-link:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="success-message">Thank you for your order!</h2>
+        <a href="{% url 'home' %}" class="home-link">Go back to homepage</a>
+    </div>
+</body>
+</html>

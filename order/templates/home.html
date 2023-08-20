@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Ordering</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar .nav-toggle {
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        .cart {
+            flex-basis: 30%;
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .cart h2 {
+            margin-bottom: 10px;
+        }
+
+        .cart ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cart li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart li:last-child {
+            margin-bottom: 0;
+        }
+
+        .quantity-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cart .quantity-button {
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .products {
+            flex-basis: 70%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .product-card {
+            flex-basis: calc(33.33% - 20px);
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            object-fit: cover;
+        }
+
+        .product-card h2 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .product-card p {
+            margin-bottom: 10px;
+        }
+
+        .product-card .add-to-cart-button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-card .add-to-cart-button:hover {
+            background-color: #555;
+        }
+
+        .checkout-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-button:hover {
+            background-color: #2980b9;
+        }
+
+        .order-status {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .order-status p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .emoji {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Kanaka Durga Tiffin Center</div>
+        <div class="nav-toggle">&#9776;</div>
+    </nav>
+
+    <div class="container">
+        <div class="cart">
+            <h2>Cart</h2>
+            {% if cart_items %}
+                <ul>
+                    {% for item in cart_items %}
+                        <li>
+                            <div>
+                                {{ item.product.name }} - {{ item.quantity }}
+                            </div>
+                            <div class="quantity-buttons">
+                                <form method="POST" action="{% url 'increase_quantity' item.product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="quantity-button">+</button>
+                                </form>
+                                <form method="POST" action="{% url 'decrease_quantity' item.product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="quantity-button">-</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'checkout' %}" class="checkout-button">Checkout</a>
+            {% else %}
+                <p>Your cart is empty.</p>
+            {% endif %}
+        </div>
+        <div class="products">
+            {% for product in products %}
+                <div class="product-card">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <h2>{{ product.name }}</h2>
+                    <p>Price: {{ product.price }}</p>
+                    <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="add-to-cart-button">Add to Cart</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="order-status">
+        {% if order_status == 'Ordered' %}
+            <p>Your order is being processed. <span class="emoji">&#128736;</span></p>
+        {% elif order_status == 'Prepared' %}
+            <p>Your order is prepared and ready for delivery. <span class="emoji">&#127829;</span></p>
+        {% elif order_status == 'Delivered' %}
+            <p>Your order has been delivered. Enjoy your meal! <span class="emoji">&#127857;</span></p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Add your JavaScript code here for the navbar animation
+        const navToggle = document.querySelector('.nav-toggle');
+        const navbar = document.querySelector('.navbar');
+
+        navToggle.addEventListener('click', () => {
+            navbar.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

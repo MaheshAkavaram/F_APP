@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f5f5f5;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Adjust the gap as needed */
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+
+        .radio-group label {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .radio-group input[type="radio"]:checked + label {
+            background-color: #337ab7;
+            color: #fff;
+        }
+
+        .radio-group label:hover {
+            background-color: #f2f2f2;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #45a049;
+        }
+
+        .qr-code-image {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .qr-code-image img {
+            max-width: 200px;
+            height: auto;
+        }
+                body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .frame {
+            max-width: 200px; /* Set the maximum width for the frame */
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-code {
+            max-width: 100%; /* Ensure the image fits within the frame */
+            height: auto; /* Automatically adjust the height to maintain aspect ratio */
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Checkout</h2>
+
+        <form method="POST" action="{% url 'place_order' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="user_name">Name</label>
+                <input type="text" name="user_name" id="user_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile_number">Mobile Number</label>
+                <input type="text" name="mobile_number" id="mobile_number" required>
+            </div>
+
+            <h3>Cart</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.product.price }}</td>
+                            <td>{{ item.total }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="total">Total</td>
+                        <td class="total">{{ cart_total }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <h3>Address Details</h3>
+            <div class="address-radio-container">
+                <input type="radio" id="home_address" name="address" value="Chityala" required>
+                <label for="home_address">Chityala</label>
+                <input type="radio" id="other_address" name="address" value="Others" required>
+                <label for="other_address">Others</label>
+            </div>
+
+            <h3>Payment Method</h3>
+            <div class="radio-group">
+                <input type="radio" id="cash_on_delivery" name="payment_method" value="cod" required>
+                <label for="cash_on_delivery">Cash on Delivery</label>
+                <input type="radio" id="other_payment_methods" name="payment_method" value="other" required>
+                <label for="other_payment_methods">Other Payment Methods</label>
+    <!-- Add more payment method options here if needed -->
+            </div>
+
+            <button class="checkout-btn" type="submit">Place Order</button>
+        </form>
+    </div>
+</body>
+</html>

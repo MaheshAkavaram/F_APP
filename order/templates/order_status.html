@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Status</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .order-status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .order-status .status-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .order-status .status-circle.pending {
+            animation: pulse 1.5s infinite;
+        }
+
+        .order-status .status-circle.prepared {
+            background-color: #ffd700;
+            animation: rotate 2s infinite;
+        }
+
+        .order-status .status-circle.delivered {
+            background-color: #00cc00;
+        }
+
+        .order-status .status-text {
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Order Status</h2>
+
+    <div class="order-status">
+        {% if order_status == 'Pending' %}
+            <div class="status-circle pending"></div>
+            <div class="status-text">Your order is being processed</div>
+        {% elif order_status == 'Prepared' %}
+            <div class="status-circle prepared"></div>
+            <div class="status-text">Your order is prepared and ready</div>
+        {% elif order_status == 'Delivered' %}
+            <div class="status-circle delivered"></div>
+            <div class="status-text">Your order is delivered</div>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>
