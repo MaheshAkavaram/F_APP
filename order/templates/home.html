@@ -32,17 +32,41 @@
             cursor: pointer;
         }
 
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .menu {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .menu-item {
+            color: #fff;
+            text-decoration: none;
+            margin: 5px 0;
+            transition: color 0.3s;
+        }
+
+        .menu-item:hover {
+            color: #ffd700;
+        }
+
         .container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             margin: 20px;
         }
 
         .cart {
-            flex-basis: 30%;
+            flex-basis: calc(50% - 10px);
             background-color: #f5f5f5;
             padding: 20px;
             border-radius: 5px;
+            margin-bottom: 20px;
         }
 
         .cart h2 {
@@ -62,10 +86,6 @@
             align-items: center;
         }
 
-        .cart li:last-child {
-            margin-bottom: 0;
-        }
-
         .quantity-buttons {
             display: flex;
             gap: 10px;
@@ -81,7 +101,7 @@
         }
 
         .products {
-            flex-basis: 70%;
+            flex-basis: calc(50% - 10px);
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
@@ -158,12 +178,58 @@
         .emoji {
             font-size: 24px;
         }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .navbar .logo {
+                margin-bottom: 10px;
+            }
+
+            .menu {
+                display: flex;
+            }
+
+            .navbar .nav-toggle {
+                margin-top: 10px;
+            }
+
+            .navbar h2 {
+                margin-top: 10px;
+            }
+            .navbar h4 {
+                margin-top:10px;
+                padding-left:10px
+            }
+            .container {
+                margin: 10px;
+            }
+
+            .cart,
+            .products {
+                flex-basis: 100%;
+            }
+
+            .product-card {
+                flex-basis: calc(50% - 10px);
+            }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="logo">Kanaka Durga Tiffin Center</div>
         <div class="nav-toggle">&#9776;</div>
+        <h2><small>For More Info</small> Contact: 8464031098</h2>
+        <a href="{% url 'about_us' %}" class="menu-item">About Us</a>
+        <div class="menu">
+            <a href="about_us" class="menu-item">About Us</a>
+            <a href="#" class="menu-item">Contact Us</a>
+        </div>
     </nav>
 
     <div class="container">

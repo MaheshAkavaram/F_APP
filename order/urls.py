@@ -24,4 +24,5 @@ urlpatterns = [
     path("razorpay/callback/", views.callback, name="callback"),
     path('payment_success/', views.payment_success, name='payment_success'),
     path('other_payment/', views.other_payment, name='other_payment'),
+    path('about-us/', views.about_us, name='about_us'),
 ]

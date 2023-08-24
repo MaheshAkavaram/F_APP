@@ -521,3 +521,7 @@ def other_payment(request):
         context['error_message'] = error_message
 
     return render(request, 'other_payment.html', context)
+
+
+def about_us(request):
+    return render(request, 'about_us.html')

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Us</title>
+    <style>
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Set up a basic layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .about-section {
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .about-image {
+            width: 600px; /* Set the desired width for the container */
+            height: 300px; /* Set the desired height for the container */
+            overflow: hidden; /* Hide any overflowing content */
+            border-radius: 10px; /* Add border radius to create a rounded container */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+
+        .about-image img {
+            width: 100%; /* Set the width to 100% of the container */
+            height: 100%; /* Set the height to 100% of the container */
+            object-fit: cover; /* Maintain the image's aspect ratio and cover the entire container */
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .image-box {
+            width: 200px;
+            height: 200px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .image-box:hover img {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .about-section {
+                padding: 20px 0;
+            }
+        }
+
+        .home-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .home-button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>About Us</h1>
+        <a href="{% url 'home' %}" class="home-button">Home</a>
+    </header>
+
+    <div class="container">
+        <div class="about-section">
+            <div class="about-image">
+                <img src="https://lh3.googleusercontent.com/p/AF1QipOY0dZF05MxEv1BGfDnbpqElDf8oR93cu187OZX=s680-w680-h510" alt="About Us">
+            </div>
+            <h2>Welcome to Our Kanaka Durga Hotel</h2>
+            <p>We are happy to serve our customers.</p>
+        </div>
+
+        <div class="image-container">
+            <div class="image-box">
+                <img src="https://10619-2.s.cdn12.com/rests/original/105_212701243.jpg" alt="Image 1">
+            </div>
+            <div class="image-box">
+                <img src="https://content3.jdmagicbox.com/comp/nalgonda/s2/9999p8682.8682.110225150400.e7s2/catalogue/kanaka-durga-hotel-chityala-nalgonda-hotels-pkd9s7krpt.jpg" alt="Image 2">
+            </div>
+            <div class="image-box">
+                <img src="https://content.jdmagicbox.com/comp/nalgonda/s2/9999p8682.8682.110225150400.e7s2/catalogue/kanaka-durga-hotel-chityala-nalgonda-hotels-pyqyu4x06z-250.jpg" alt="Image 3">
+            </div>
+            <!-- Add more image-box elements as needed -->
+        </div>
+    </div>
+
+    <footer>
+        <p>Contact Us: Surya@email.com | Phone: +91 8464031098</p>
+    </footer>
+</body>
+</html>
