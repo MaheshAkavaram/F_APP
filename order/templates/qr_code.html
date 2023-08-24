@@ -103,14 +103,19 @@
         <div class="frame">
             <img class="qr-code" src="{{ qr_image_url }}" alt="QR Code">
         </div>
+         <h2>Scan above QR Code to pay </br>
+         we will reach you once your order is ready</h2>
+        <h2>Thank you for choosing us</h2>
     </div>
     <div class="container payment-option">
         <h3>UPI Payment</h3>
+        <h3>Currently This method is on hold</h3>
         <p class="upi-id">Make payment to UPI ID: {{ upi_id }}</p>
         <input type="text" class="upi-field" placeholder="Enter UPI ID" required>
         <button class="upi-button" onclick="makeUpiPayment()">Make UPI Payment</button>
 
         <h3>Other Payment Method</h3>
+        <h3>Currently This method is on hold</h3>
         <select name="other_payment_method">
             <option value="credit_card">Credit Card</option>
             <option value="debit_card">Debit Card</option>
