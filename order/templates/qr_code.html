@@ -129,7 +129,7 @@
             const transactionId = 'YourTransactionId';
             const transactionRefId = 'YourTransactionRefId';
             const transactionNote = 'YourTransactionNote';
-            const amount = 'YourAmount';
+            const cartTotal = {{ cart_total }};
 
             // Construct the UPI intent URL
             const intentUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(merchantName)}&mc=${encodeURIComponent(merchantCode)}&tid=${encodeURIComponent(transactionId)}&tr=${encodeURIComponent(transactionRefId)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}`;
