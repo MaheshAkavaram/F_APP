@@ -1,105 +1,141 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>QR Code</title>
+    <title>Payment</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
         }
-
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
+        .card {
+            max-width: 350px;
             background-color: #fff;
-            border-radius: 5px;
+            border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px;
+        }
+        .card-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .payment-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        h2 {
             text-align: center;
-            margin-bottom: 20px;
         }
-
-        .frame {
-            max-width: 200px; /* Set the maximum width for the frame */
-            margin: 0 auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .qr-code {
-            max-width: 100%; /* Ensure the image fits within the frame */
-            height: auto; /* Automatically adjust the height to maintain aspect ratio */
-            display: block;
-            margin: 0 auto; /* Center the image */
-        }
-
-        .payment-option {
-            margin-top: 30px;
-        }
-
-        .payment-option h3 {
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 20px;
-        }
-
-        .upi-button {
-            background-color: #4caf50;
+        .payment-button {
+            background-color: #007bff;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             padding: 10px 20px;
-            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px; /* Add margin to the top */
+            font-size: 16px;
+            margin-top: 10px;
         }
-
-        .upi-button:hover {
-            background-color: #45a049;
+        .payment-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
         }
-        .order-status {
-            text-align: center;
+        .success-message {
+            font-size: 18px;
+            color: green;
+            margin-top: 10px;
+            display: none;
+        }
+        #qr-code-image {
+            max-width: 100%;
+            height: auto;
+        }
+        #scan-button {
             margin-top: 20px;
-        }
-
-        .order-status h4 {
-            margin-bottom: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>QR Code</h2>
-        <div class="frame">
-            <img class="qr-code" src="{{ qr_image_url }}" alt="QR Code">
-        </div>
-        <div>
-            <button class="upi-button" onclick="makePayment()">Make Payment</button>
-        </div>
-        <div class="order-status">
-            <h4>Scan above QR Code to pay <br>
-            We will reach you once your order is ready</h4>
-            <h2>Thank you for choosing us</h2>
-        </div>
+    <!-- QR Code Payment Card -->
+    <div class="card payment-section">
+        <div class="card-header">QR Code Payment</div>
+        <img id="qr-code-image" src="{{ qr_image_url }}" alt="Payment QR Code">
+        <button id="scan-button" class="payment-button" onclick="openScanner()">Scan QR Code</button>
+        <p id="success-message" class="success-message">Please scan the above QR code to make payment</p>
     </div>
 
-    <!-- Add your JavaScript code for handling payments here -->
+    <!-- UPI Payment Card -->
+    <div class="card payment-section">
+        <div class="card-header">UPI Payment</div>
+        <input type="text" id="upi-id-input" class="payment-input" placeholder="Enter UPI ID">
+        <button class="payment-button" id="pay-button" onclick="initiatePayment()">Pay</button>
+    </div>
+
+    <script src="https://unpkg.com/@zxing/library@0.18.7/umd/index.min.js"></script>
     <script>
-        function makePayment() {
-            alert(' payment success request...');
-            window.location.href = '{% url "order_success" %}';
-            // Use Django template tag to generate the URL
+        function openScanner() {
+            const scanButton = document.getElementById('scan-button');
+            const successMessage = document.getElementById('success-message');
+            const qrCodeImage = document.getElementById('qr-code-image');
+
+            scanButton.style.display = 'none';
+            successMessage.style.display = 'none';
+            qrCodeImage.style.display = 'none';
+
+            const codeReader = new ZXing.BrowserBarcodeReader();
+            codeReader.decodeFromVideoDevice(undefined, document.body, (result, err) => {
+                if (result) {
+                    // QR code scanned successfully
+                    successMessage.style.display = 'block';
+                    setTimeout(function() {
+                        window.location.href = '{% url "order_success" %}';
+                    }, 2000); // Redirect after 2 seconds
+                } else if (err) {
+                    // Error occurred during scanning
+                    console.error(err);
+                    qrCodeImage.style.display = 'block';
+                    scanButton.style.display = 'block';
+                }
+            });
+        }
+
+        function initiatePayment() {
+            const upiIdInput = document.getElementById('upi-id-input');
+            const upiId = upiIdInput.value;
+
+            // Check if UPI ID is entered
+            if (!upiId) {
+                alert('Please enter a valid UPI ID.');
+                return;
+            }
+
+            // Replace placeholders with actual values
+            const merchantName = 'YourMerchantName';
+            const merchantCode = 'YourMerchantCode';
+            const transactionId = 'YourTransactionId';
+            const transactionRefId = 'YourTransactionRefId';
+            const transactionNote = 'YourTransactionNote';
+            const amount = 'YourAmount';
+
+            // Construct the UPI intent URL
+            const intentUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(merchantName)}&mc=${encodeURIComponent(merchantCode)}&tid=${encodeURIComponent(transactionId)}&tr=${encodeURIComponent(transactionRefId)}&tn=${encodeURIComponent(transactionNote)}&am=${encodeURIComponent(amount)}`;
+
+            // Redirect to the UPI intent URL to open the UPI app
+            window.location.href = intentUrl;
         }
     </script>
 </body>

@@ -25,4 +25,6 @@ urlpatterns = [
     path('payment_success/', views.payment_success, name='payment_success'),
     path('other_payment/', views.other_payment, name='other_payment'),
     path('about-us/', views.about_us, name='about_us'),
+    path('process_upi_payment/', views.process_upi_payment, name='process_upi_payment'),
+
 ]

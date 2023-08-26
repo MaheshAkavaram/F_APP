@@ -256,6 +256,26 @@ def place_order(request):
             # Example: If you have a separate view named 'other_payment', you can redirect to it
             # return redirect('qr_code')
 
+        elif payment_method == 'upi':
+            for product_id, quantity in cart.items():
+                product = get_object_or_404(Product, pk=product_id)
+                order = Order(
+                    user_name=user_name,
+                    mobile_number=mobile_number,
+                    product=product,
+                    quantity=quantity,
+                    payment_method=payment_method,
+                    order_status='pending',  # You can set an appropriate initial status
+                    address_type=address_type,
+                    order_time=timezone.now(),
+                )
+                order.save()
+
+            del request.session['cart']
+            messages.success(request, 'Order placed successfully (UPI).')
+            return redirect('order_success')  # Redirect to the order success page
+
+
         else:
             messages.error(request, 'Invalid payment method selected.')
             return redirect('checkout')
@@ -525,3 +545,21 @@ def other_payment(request):
 
 def about_us(request):
     return render(request, 'about_us.html')
+
+
+from django.shortcuts import render, redirect
+
+def process_upi_payment(request):
+    if request.method == 'GET':
+        upi_id = request.GET.get('upi_id')
+
+        if upi_id:
+            # Implement your UPI payment logic here
+            # You can use the upi_id to process the payment
+            # If the payment is successful, you can redirect to the success page
+            return redirect('payment_success')  # Replace with your success page URL
+        else:
+            # UPI ID not provided, handle accordingly
+            return redirect('qr_code')  # Redirect back to the QR code page or an error page
+
+    return redirect('qr_code')  # Redirect back to the QR code page if the method is not GET

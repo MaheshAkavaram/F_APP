@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -37,7 +38,7 @@ class Order(models.Model):
     )
 
     user_name = models.CharField(max_length=100)
-    mobile_number = models.CharField(max_length=15)
+    mobile_number = PhoneNumberField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     order_date = models.DateField(default=timezone.now)
